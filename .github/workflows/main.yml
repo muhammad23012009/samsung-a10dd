@@ -34,9 +34,13 @@ jobs:
             sudo mv mkbootimg.py /usr/bin/mkbootimg
             sudo chmod 777 /usr/bin/mkbootimg
             cd ~
+
       - name: Clone in our builder
         run: git clone https://github.com/muhammad23012009/samsung-a10dd
           
+      - name: Pull LLVM source
+        run: git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 -b master --depth=1 ~/linux-x86
+
       - name: Start build
         run: ./build.sh -b out/
         

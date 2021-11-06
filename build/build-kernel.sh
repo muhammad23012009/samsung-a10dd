@@ -21,7 +21,7 @@ esac
 
 export ARCH
 export CROSS_COMPILE="${deviceinfo_arch}-linux-android-"
-export LD="ld.lld"
+export LD_LIBRARY_PATH="~/linux-x86/clang-r416183b/lib64"
 if [ "$ARCH" == "arm64" ]; then
     export CROSS_COMPILE_ARM32=arm-linux-androideabi-
 fi
