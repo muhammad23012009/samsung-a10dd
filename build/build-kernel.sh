@@ -19,21 +19,19 @@ case "$deviceinfo_arch" in
     x86) ARCH="x86" ;;
 esac
 
-export ARCH
 export CROSS_COMPILE="${deviceinfo_arch}-linux-android-"
-export LD_LIBRARY_PATH="~/linux-x86/clang-r416183b/lib64"
 if [ "$ARCH" == "arm64" ]; then
     export CROSS_COMPILE_ARM32=arm-linux-androideabi-
 fi
-MAKEOPTS=""
-if [ -n "$CC" ]; then
-    MAKEOPTS="CC=$CC"
-fi
+MAKEOPTS="CC=clang CLANG_TRIPLE=aarch64-linux-gnu-"
+# if [ -n "$CC" ]; then
+#    MAKEOPTS="CC=$CC"
+# fi
 
 cd "$KERNEL_DIR"
-make O="$OUT" $deviceinfo_kernel_defconfig
-make O="$OUT" $MAKEOPTS -j$(nproc --all)
-make O="$OUT" $MAKEOPTS INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH="$INSTALL_MOD_PATH" modules_install
+LD_LIBRARY_PATH="$TMPDOWN/proton-clang/lib:$LD_LIBRARY_PATH make O="$OUT" $deviceinfo_kernel_defconfig
+LD_LIBRARY_PATH="$TMPDOWN/proton-clang/lib:$LD_LIBRARY_PATH make O="$OUT" $MAKEOPTS -j$(nproc --all)
+LD_LIBRARY_PATH="$TMPDOWN/proton-clang/lib:$LD_LIBRARY_PATH make O="$OUT" $MAKEOPTS INSTALL_MOD_STRIP=1 INSTALL_MOD_PATH="$INSTALL_MOD_PATH" modules_install
 ls "$OUT/arch/$ARCH/boot/"*Image*
 
 if [ -n "$deviceinfo_kernel_apply_overlay" ] && $deviceinfo_kernel_apply_overlay; then
